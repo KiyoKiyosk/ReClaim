@@ -226,3 +226,4 @@ ol li { margin-bottom: 8px; }
 .filters input { flex: 1 1 220px; width: auto; }
 .filters select { flex: 0 1 190px; width: auto; }
 .muted { color: var(--muted, #64748b); font-size: 0.85rem; margin: 0 0 8px; }
+.stack { display: flex; flex-direction: column; gap: 12px; margin: 16px 0; }

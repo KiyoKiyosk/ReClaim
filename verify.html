@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>ReClaim - Verify your email</title>
+  <link rel='stylesheet' href='css/style.css'>
+</head>
+<body>
+  <main class='card'>
+    <img class='logo-big' src='images/lspu-logo.png' alt='LSPU logo'>
+    <h1>Verify your email</h1>
+    <p>We sent a verification link to <strong id='email-label'></strong>.</p>
+    <p>Open the email, click the link, then come back here. If you can't find it, check your spam folder.</p>
+    <div class='stack'>
+      <button id='check'>I've verified, continue</button>
+      <button id='resend' class='secondary'>Resend email</button>
+      <button id='logout-btn' class='secondary'>Log out</button>
+    </div>
+    <p id='msg' class='error'></p>
+  </main>
+  <script type='module' src='js/verify.js'></script>
+</body>
+</html>

@@ -1,12 +1,26 @@
 import { auth, db } from './firebase-config.js';
-import { createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import { friendlyError } from './messages.js';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
 const TERMS_VERSION = '1.0';
-const ALLOWED_DOMAIN = ''; // example: '@yourschool.edu.ph'. Leave empty for now.
+const ALLOWED_DOMAIN = ''; // keep the value you already set, or leave empty while testing
 
 const form = document.getElementById('signup-form');
 const msg = document.getElementById('msg');
+
+// Remember what was typed, in case the page is refreshed or the Terms link is opened
+const SAVED_FIELDS = ['fullName', 'studentNumber', 'email'];
+SAVED_FIELDS.forEach((id) => {
+  const input = document.getElementById(id);
+  try {
+    const saved = localStorage.getItem('reclaim-signup-' + id);
+    if (saved) input.value = saved;
+  } catch (e) {}
+  input.addEventListener('input', () => {
+    try { localStorage.setItem('reclaim-signup-' + id, input.value); } catch (e) {}
+  });
+});
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -37,7 +51,9 @@ form.addEventListener('submit', async (e) => {
       termsVersion: TERMS_VERSION,
       termsAcceptedAt: serverTimestamp()
     });
-    window.location.href = 'board.html';
+    SAVED_FIELDS.forEach((id) => { try { localStorage.removeItem('reclaim-signup-' + id); } catch (e) {} });
+    try { await sendEmailVerification(cred.user); } catch (e) {}
+    window.location.href = 'verify.html';
   } catch (err) {
     msg.textContent = friendlyError(err);
   }

@@ -2,7 +2,7 @@ import { auth, db } from './firebase-config.js';
 import { onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import { doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
-export function guard({ adminOnly = false } = {}) {
+export function guard({ adminOnly = false, allowUnverified = false } = {}) {
   return new Promise((resolve) => {
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
@@ -16,7 +16,13 @@ export function guard({ adminOnly = false } = {}) {
         return;
       }
       const profile = snap.data();
-      if (adminOnly && profile.role !== 'admin') {
+      const isAdmin = profile.role === 'admin';
+
+      if (!allowUnverified && !isAdmin && !user.emailVerified) {
+        window.location.href = 'verify.html';
+        return;
+      }
+      if (adminOnly && !isAdmin) {
         window.location.href = 'board.html';
         return;
       }
