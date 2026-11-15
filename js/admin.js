@@ -68,14 +68,43 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-// ---------- List of items with status controls ----------
+// ---------- Admin list: items + private records ----------
+let items = [];
+let logs = {};
+
 onSnapshot(query(collection(db, 'items'), orderBy('createdAt', 'desc')), (snap) => {
+  items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  renderList();
+});
+
+onSnapshot(collection(db, 'itemLogs'), (snap) => {
+  logs = {};
+  snap.docs.forEach((d) => { logs[d.id] = d.data(); });
+  renderList();
+});
+
+function formatDate(ts) {
+  if (!ts || !ts.toDate) return '';
+  return ts.toDate().toLocaleString();
+}
+
+function textLine(text, className) {
+  const el = document.createElement('div');
+  if (className) el.className = className;
+  el.textContent = text;
+  return el;
+}
+
+function renderList() {
   const list = document.getElementById('item-list');
   list.replaceChildren();
-  if (snap.empty) list.textContent = 'No items yet.';
+  if (!items.length) {
+    list.textContent = 'No items yet.';
+    return;
+  }
 
-  snap.docs.forEach((d) => {
-    const i = d.data();
+  items.forEach((i) => {
+    const log = logs[i.id] || {};
     const row = document.createElement('div');
     row.className = 'row';
 
@@ -91,7 +120,7 @@ onSnapshot(query(collection(db, 'items'), orderBy('createdAt', 'desc')), (snap) 
       select.appendChild(o);
     });
     select.onchange = async () => {
-      const ok = await changeStatus(d.id, select.value);
+      const ok = await changeStatus(i.id, select.value);
       if (!ok) select.value = i.status;
     };
 
@@ -99,14 +128,29 @@ onSnapshot(query(collection(db, 'items'), orderBy('createdAt', 'desc')), (snap) 
     del.textContent = 'Delete';
     del.onclick = async () => {
       if (!confirm('Delete this item?')) return;
-      await deleteDoc(doc(db, 'items', d.id));
-      await deleteDoc(doc(db, 'itemLogs', d.id));
+      await deleteDoc(doc(db, 'items', i.id));
+      await deleteDoc(doc(db, 'itemLogs', i.id));
     };
 
-    row.append(name, select, del);
+    const details = document.createElement('div');
+    details.className = 'details';
+    details.appendChild(textLine(
+      'Found by: ' + (log.finderName || '-') + '  |  Received by: ' + (log.receivedBy || '-')
+    ));
+    if (i.status === 'Claimed') {
+      const when = formatDate(log.releasedAt);
+      details.appendChild(textLine(
+        'Claimed by: ' + (log.claimantName || '-') +
+        '  |  Verified by: ' + (log.verifiedBy || '-') +
+        (when ? '  |  Released: ' + when : ''),
+        'claimed-line'
+      ));
+    }
+
+    row.append(name, select, del, details);
     list.appendChild(row);
   });
-});
+}
 
 async function changeStatus(id, status) {
   if (status === 'Claimed') {
@@ -116,6 +160,13 @@ async function changeStatus(id, status) {
       claimantName,
       verifiedBy: profile.fullName,
       releasedAt: serverTimestamp()
+    }, { merge: true });
+  } else {
+    // moving away from Claimed: clear the old claim details
+    await setDoc(doc(db, 'itemLogs', id), {
+      claimantName: '',
+      verifiedBy: '',
+      releasedAt: null
     }, { merge: true });
   }
   await updateDoc(doc(db, 'items', id), { status });

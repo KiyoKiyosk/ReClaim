@@ -209,3 +209,13 @@ ol li { margin-bottom: 8px; }
   main > input { min-width: 0; width: 100%; }
   .row { flex-wrap: wrap; }
 }
+.row { flex-wrap: wrap; }
+.row .details {
+  flex-basis: 100%;
+  font-size: 0.85rem;
+  color: var(--muted, #6b7280);
+}
+.row .details .claimed-line {
+  color: var(--navy, #1b2a49);
+  font-weight: 500;
+}
