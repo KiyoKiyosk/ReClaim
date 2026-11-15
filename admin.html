@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>ReClaim - Admin</title>
+  <link rel='stylesheet' href='css/style.css'>
+</head>
+<body>
+  <header>
+    <h1>ReClaim Admin</h1>
+    <a href='board.html'>View board</a>
+    <button id='logout'>Log out</button>
+  </header>
+  <main>
+    <section class='card'>
+      <h2>Post a found item</h2>
+      <form id='item-form'>
+        <input id='title' placeholder='Item name (e.g. Black umbrella)' required>
+        <select id='category' required>
+          <option value='ID'>ID</option>
+          <option value='Umbrella'>Umbrella</option>
+          <option value='Calculator'>Calculator</option>
+          <option value='Bottle'>Bottle</option>
+          <option value='Bag'>Bag</option>
+          <option value='Other'>Other</option>
+        </select>
+        <textarea id='description' placeholder='Vague description. Do NOT include identifying details.' required></textarea>
+        <input id='locationFound' placeholder='Where it was found' required>
+        <input id='dateReceived' type='date' required>
+        <input id='storageLocation' placeholder='Where it is kept in the office' required>
+        <input id='photo' type='file' accept='image/*'>
+        <h3>Office record (students cannot see this)</h3>
+        <input id='finderName' placeholder='Name of the person who turned it in' required>
+        <input id='receivedBy' placeholder='Staff member who received it' required>
+        <button type='submit'>Post item</button>
+        <p id='msg'></p>
+      </form>
+    </section>
+    <section class='card'>
+      <h2>All items</h2>
+      <div id='item-list'></div>
+    </section>
+  </main>
+  <script type='module' src='js/admin.js'></script>
+</body>
+</html>

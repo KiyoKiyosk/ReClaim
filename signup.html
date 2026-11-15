@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>ReClaim - Sign up</title>
+  <link rel='stylesheet' href='css/style.css'>
+</head>
+<body>
+  <main class='card'>
+    <h1>Create your account</h1>
+    <form id='signup-form'>
+      <input id='fullName' placeholder='Full name' required>
+      <input id='studentNumber' placeholder='Student number' required>
+      <input id='email' type='email' placeholder='School email' required>
+      <input id='password' type='password' placeholder='Password (6+ characters)' minlength='6' required>
+      <label>
+        <input id='terms' type='checkbox'>
+        I have read and agree to the <a href='terms.html' target='_blank'>Terms and Conditions</a>
+      </label>
+      <button type='submit'>Sign up</button>
+      <p id='msg' class='error'></p>
+    </form>
+    <p>Already have an account? <a href='login.html'>Log in</a></p>
+  </main>
+  <script type='module' src='js/signup.js'></script>
+</body>
+</html>
