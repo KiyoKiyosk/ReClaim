@@ -45,12 +45,16 @@ function card(i) {
   const a = document.createElement('a');
   a.className = 'item-card';
   a.href = 'item.html?id=' + i.id;
-  if (i.photoUrl) {
+
+  const thumb = i.thumbUrl || i.photoUrl;
+  if (thumb) {
     const img = document.createElement('img');
-    img.src = i.photoUrl;
+    img.src = thumb;
     img.alt = i.title;
+    img.loading = 'lazy';
     a.appendChild(img);
   }
+
   const h = document.createElement('h3');
   h.textContent = i.title;
   const c = document.createElement('p');

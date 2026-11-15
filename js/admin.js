@@ -15,6 +15,10 @@ const formTitle = document.getElementById('form-title');
 const submitBtn = document.getElementById('submit-btn');
 const cancelBtn = document.getElementById('cancel-edit');
 const listBox = document.getElementById('item-list');
+const adminSearch = document.getElementById('admin-search');
+const adminStatus = document.getElementById('admin-status');
+const adminCategory = document.getElementById('admin-category');
+const countEl = document.getElementById('count');
 const val = (id) => document.getElementById(id).value.trim();
 const setVal = (id, value) => { document.getElementById(id).value = value || ''; };
 
@@ -23,7 +27,7 @@ let items = [];
 let logs = {};
 
 // Shrinks a photo so it is small enough to store inside Firestore
-function shrinkPhoto(file, maxSize = 480) {
+function shrinkPhoto(file, maxSize = 480, quality = 0.7) {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
@@ -34,7 +38,7 @@ function shrinkPhoto(file, maxSize = 480) {
       canvas.height = Math.round(img.height * scale);
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
       URL.revokeObjectURL(url);
-      resolve(canvas.toDataURL('image/jpeg', 0.7));
+      resolve(canvas.toDataURL('image/jpeg', quality));
     };
     img.onerror = () => reject(Object.assign(new Error('unreadable'), { code: 'photo-unreadable' }));
     img.src = url;
@@ -80,7 +84,8 @@ form.addEventListener('submit', async (e) => {
   submitBtn.disabled = true;
   try {
     const file = document.getElementById('photo').files[0];
-    const newPhoto = file ? await shrinkPhoto(file) : '';
+    const photoUrl = file ? await shrinkPhoto(file, 480, 0.7) : '';
+    const thumbUrl = file ? await shrinkPhoto(file, 200, 0.6) : '';
 
     const fields = {
       title: val('title'),
@@ -97,7 +102,10 @@ form.addEventListener('submit', async (e) => {
 
     if (editingId) {
       const changes = { ...fields };
-      if (newPhoto) changes.photoUrl = newPhoto;
+      if (photoUrl) {
+        changes.photoUrl = photoUrl;
+        changes.thumbUrl = thumbUrl;
+      }
       await updateDoc(doc(db, 'items', editingId), changes);
       await setDoc(doc(db, 'itemLogs', editingId), office, { merge: true });
       resetForm();
@@ -105,7 +113,8 @@ form.addEventListener('submit', async (e) => {
     } else {
       const itemRef = await addDoc(collection(db, 'items'), {
         ...fields,
-        photoUrl: newPhoto,
+        photoUrl,
+        thumbUrl,
         status: 'Unclaimed',
         postedBy: profile.fullName,
         createdAt: serverTimestamp()
@@ -146,6 +155,10 @@ onSnapshot(
   () => {}
 );
 
+adminSearch.oninput = renderList;
+adminStatus.onchange = renderList;
+adminCategory.onchange = renderList;
+
 function formatDate(ts) {
   if (!ts || !ts.toDate) return '';
   return ts.toDate().toLocaleString();
@@ -158,14 +171,35 @@ function textLine(text, className) {
   return el;
 }
 
+function matches(i) {
+  const log = logs[i.id] || {};
+  const text = adminSearch.value.trim().toLowerCase();
+  const haystack = [
+    i.title, i.description, i.category, i.locationFound, i.storageLocation,
+    log.finderName, log.receivedBy, log.claimantName, log.verifiedBy
+  ].join(' ').toLowerCase();
+  return (adminStatus.value === 'all' || i.status === adminStatus.value) &&
+    (adminCategory.value === 'all' || i.category === adminCategory.value) &&
+    haystack.includes(text);
+}
+
 function renderList() {
   listBox.replaceChildren();
+  const shown = items.filter(matches);
+  countEl.textContent = items.length
+    ? 'Showing ' + shown.length + ' of ' + items.length + ' items'
+    : '';
+
   if (!items.length) {
     listBox.textContent = 'No items yet.';
     return;
   }
+  if (!shown.length) {
+    listBox.textContent = 'No items match your search.';
+    return;
+  }
 
-  items.forEach((i) => {
+  shown.forEach((i) => {
     const log = logs[i.id] || {};
     const row = document.createElement('div');
     row.className = 'row';

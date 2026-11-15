@@ -46,6 +46,29 @@
     </section>
     <section class='card'>
       <h2>All items</h2>
+      <div class='filters'>
+        <input id='admin-search' placeholder='Search title, description, finder, or claimant'>
+        <select id='admin-status'>
+          <option value='all'>All statuses</option>
+          <option value='Unclaimed'>Unclaimed</option>
+          <option value='Pending'>Pending</option>
+          <option value='Claimed'>Claimed</option>
+        </select>
+        <select id='admin-category'>
+          <option value='all'>All categories</option>
+          <option value='IDs and Cards'>IDs and Cards</option>
+          <option value='Wallets and Money'>Wallets and Money</option>
+          <option value='Bags'>Bags</option>
+          <option value='Gadgets'>Gadgets</option>
+          <option value='Keys'>Keys</option>
+          <option value='Books and Supplies'>Books and Supplies</option>
+          <option value='Bottles and Lunch'>Bottles and Lunch</option>
+          <option value='Clothing and Accessories'>Clothing and Accessories</option>
+          <option value='Umbrellas'>Umbrellas</option>
+          <option value='Other'>Other</option>
+        </select>
+      </div>
+      <p id='count' class='muted'></p>
       <div id='item-list'>Loading items...</div>
     </section>
   </main>
