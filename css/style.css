@@ -222,3 +222,22 @@ ol li { margin-bottom: 8px; }
   .card { padding: 24px 20px; margin: 4vh 14px; }
   main > input { min-width: 0; width: 100%; }
 }
+.success { color: #2f6b3f; min-height: 1.2em; margin: 0; font-size: 0.9rem; }
+.check { display: inline-block; margin: 0 0 20px; color: var(--muted, #64748b); }
+
+.claim-box {
+  background: var(--blue-light, #e8f0fb);
+  border-left: 4px solid var(--blue, #1a4a9c);
+  border-radius: 6px;
+  padding: 14px 18px;
+  margin-top: 20px;
+}
+.claim-box h3 { margin-top: 0; }
+.claim-box ul { margin: 8px 0 0; padding-left: 20px; }
+#status-note { color: var(--muted, #64748b); font-style: italic; }
+
+.row button.edit-btn { background: transparent; color: var(--blue, #1a4a9c); border-color: var(--blue, #1a4a9c); }
+.row button.edit-btn:hover { background: var(--blue, #1a4a9c); color: #ffffff; }
+
+button.secondary { background: transparent; color: var(--muted, #64748b); border-color: var(--border, #d9e3f2); }
+button.secondary:hover { background: var(--blue-light, #e8f0fb); color: var(--blue-dark, #0f2f6b); border-color: var(--blue, #1a4a9c); }

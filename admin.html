@@ -9,19 +9,18 @@
 <body>
   <header>
     <img class='logo' src='images/lspu-logo.png' alt='LSPU logo'>
-    <h1>ReClaim</h1>
     <h1>ReClaim Admin</h1>
     <a href='board.html'>View board</a>
     <button id='logout'>Log out</button>
   </header>
   <main>
     <section class='card'>
-      <h2>Post a found item</h2>
+      <h2 id='form-title'>Post a found item</h2>
       <form id='item-form'>
         <input id='title' placeholder='Item name (e.g. Black umbrella)' required>
         <select id='category' required>
           <option value='IDs and Cards'>IDs and Cards</option>
-          <option value='Wallets'>Wallets</option>
+          <option value='Wallets and Money'>Wallets and Money</option>
           <option value='Bags'>Bags</option>
           <option value='Gadgets'>Gadgets</option>
           <option value='Keys'>Keys</option>
@@ -35,17 +34,19 @@
         <input id='locationFound' placeholder='Where it was found' required>
         <input id='dateReceived' type='date' required>
         <input id='storageLocation' placeholder='Where it is kept in the office' required>
+        <label>Photo (optional). When editing, leave it empty to keep the current photo.</label>
         <input id='photo' type='file' accept='image/*'>
         <h3>Office record (students cannot see this)</h3>
         <input id='finderName' placeholder='Name of the person who turned it in' required>
         <input id='receivedBy' placeholder='Staff member who received it' required>
-        <button type='submit'>Post item</button>
+        <button type='submit' id='submit-btn'>Post item</button>
+        <button type='button' id='cancel-edit' class='secondary' hidden>Cancel edit</button>
         <p id='msg'></p>
       </form>
     </section>
     <section class='card'>
       <h2>All items</h2>
-      <div id='item-list'></div>
+      <div id='item-list'>Loading items...</div>
     </section>
   </main>
   <script type='module' src='js/admin.js'></script>

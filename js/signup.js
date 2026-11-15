@@ -1,7 +1,7 @@
 import { auth, db } from './firebase-config.js';
 import { createUserWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import { doc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-
+import { friendlyError } from './messages.js';
 const TERMS_VERSION = '1.0';
 const ALLOWED_DOMAIN = ''; // example: '@yourschool.edu.ph'. Leave empty for now.
 
@@ -39,6 +39,6 @@ form.addEventListener('submit', async (e) => {
     });
     window.location.href = 'board.html';
   } catch (err) {
-    msg.textContent = err.message;
+    msg.textContent = friendlyError(err);
   }
 });

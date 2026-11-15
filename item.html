@@ -13,15 +13,28 @@
     <a href='board.html'>Back to board</a>
   </header>
   <main class='card'>
-    <h2 id='d-title'></h2>
+    <h2 id='d-title'>Loading...</h2>
     <p>Category: <span id='d-category'></span></p>
     <p>Status: <strong id='d-status'></strong></p>
+    <p id='status-note'></p>
     <p id='d-desc'></p>
     <p id='d-found'></p>
     <p id='d-date'></p>
     <p id='d-storage'></p>
     <img id='d-photo' alt='' hidden>
-    <p><em>Bring proof of ownership to the office to claim this item.</em></p>
+
+    <section id='claim-box' class='claim-box'>
+      <h3>How to claim this item</h3>
+      <p>
+        Go to <strong>Dean's Office</strong>, <strong>ENGINEERING NEW BUILDING (ENB)</strong>.<br>
+        Open: <strong>Monday - Friday</strong>
+      </p>
+      <ul>
+        <li>Bring your school ID.</li>
+        <li>Be ready to describe the item and details only the owner would know.</li>
+        <li>Bring any proof you have, such as a receipt or a photo of the item.</li>
+      </ul>
+    </section>
   </main>
   <script type='module' src='js/item.js'></script>
 </body>
